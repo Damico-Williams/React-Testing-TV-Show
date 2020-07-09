@@ -3,6 +3,8 @@ import axios from "axios";
 import Dropdown from "react-dropdown";
 import parse from "html-react-parser";
 import {fetchShow} from "./api/fetchShow.js";
+import {Route, Switch} from "react-router-dom";
+import EpisodePage from "./components/EpisodePage";
 
 import { formatSeasons } from "./utils/formatSeasons";
 
@@ -46,6 +48,7 @@ export default function App() {
         placeholder="Select an option"
       />
       <Episodes episodes={episodes} />
+      <Route path="/aboutep" component={EpisodePage}/>
     </div>
   );
 }
