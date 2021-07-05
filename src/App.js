@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Dropdown from "react-dropdown";
 import parse from "html-react-parser";
+import {fetchShow} from "./api/fetchShow.js";
+import {Route, Switch} from "react-router-dom";
+import EpisodePage from "./components/EpisodePage";
 
 import { formatSeasons } from "./utils/formatSeasons";
 
@@ -15,17 +18,13 @@ export default function App() {
   const episodes = seasons[selectedSeason] || [];
 
   useEffect(() => {
-    const fetchShow = () => {
-      axios
-        .get(
-          "https://api.tvmaze.com/singlesearch/shows?q=stranger-things&embed=episodes"
-        )
+    fetchShow()
         .then(res => {
+          console.log(res.data);
           setShow(res.data);
           setSeasons(formatSeasons(res.data._embedded.episodes));
-        });
-    };
-    fetchShow();
+        })
+        .catch(err => console.log(err))
   }, []);
 
   const handleSelect = e => {
@@ -42,12 +41,14 @@ export default function App() {
       <h1>{show.name}</h1>
       {parse(show.summary)}
       <Dropdown
+        data-testid="dropDown"
         options={Object.keys(seasons)}
         onChange={handleSelect}
         value={selectedSeason || "Select a season"}
         placeholder="Select an option"
       />
       <Episodes episodes={episodes} />
+      <Route path="/aboutep" component={EpisodePage}/>
     </div>
   );
 }
